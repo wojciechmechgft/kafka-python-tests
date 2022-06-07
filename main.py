@@ -57,15 +57,13 @@ print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSasl
 # }
 
 consumer = KafkaConsumer(
-    'financing-transfer-service.repayment.snapshot.v1',
     group_id='tests',
     security_protocol='SASL_SSL',
     sasl_mechanism='AWS_MSK_IAM',
     bootstrap_servers=bootstrap_brokers_iam   
 )
 
-for msg in consumer:
-    print (msg)
+print(consumer.topics())
 
 # consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1',
 #     # group_id='my_favorite_group',
