@@ -55,7 +55,7 @@ consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1',
     group_id='my_favorite_group',
     security_protocol='SASL_SSL',
     sasl_mechanism='AWS_MSK_IAM',
-    bootstrap_servers=['b-2.apps-kafka-cluste.lkgw9s.c3.kafka.ap-southeast-1.amazonaws.com:9098']
+    bootstrap_servers=bootstrap_brokers_iam
 )
 
 for msg in consumer:
