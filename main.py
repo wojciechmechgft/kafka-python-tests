@@ -40,9 +40,11 @@ bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam')
 print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSaslIam")
 
 # https://github.com/confluentinc/confluent-kafka-python
+# https://blog.dataminded.com/aws-msk-secure-python-kafka-client-1d25dae39207
 consumer = Consumer({
     'bootstrap.servers': bootstrap_brokers_iam,
-    'group.id': 'mygroup'
+    'group.id': 'python-tests',
+    'security.protocol': 'ssl'
 })
 
 
