@@ -19,7 +19,12 @@ caller_identity = sts_client.get_caller_identity()
 print_debug(caller_identity, "STS caller identity")
 print_debug(assumed_role_object, "Assumed role object")
 
-kafka_client = boto3.client('kafka', region_name='ap-southeast-1')
+kafka_client = boto3.client('kafka', 
+    region_name='ap-southeast-1',
+    aws_access_key_id=assumed_role_object['Credentials'].get('AccessKeyId'),
+    aws_secret_access_key=assumed_role_object['Credentials'].get('SecretAccessKey'),
+    aws_session_token=assumed_role_object['Credentials'].get('SessionToken')
+)
 
 kafka_clusters_list = kafka_client.list_clusters()
 print_debug(kafka_clusters_list, "Kafka clusters")
