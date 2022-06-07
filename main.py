@@ -1,5 +1,7 @@
+# pip3 install boto3
 import boto3
-from confluent_kafka.admin import AdminClient
+# pip3 install git+https://github.com/mattoberle/kafka-python.git@feature/2232-AWS_MSK_IAM
+from kafka import KafkaConsumer
 
 def print_debug(object, desc):
     print("--- {} ---------------------------------".format(desc))
@@ -36,24 +38,28 @@ bootstrap_brokers = kafka_client.get_bootstrap_brokers(
 )
 
 print_debug(bootstrap_brokers, "Bootstrap brokers")
-bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam')
+bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam').split(",")
 print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSaslIam")
 
-# https://github.com/confluentinc/confluent-kafka-python
-# https://blog.dataminded.com/aws-msk-secure-python-kafka-client-1d25dae39207
+# https://github.com/dpkp/kafka-python/pull/2255
 
 conf = {
-    "security.protocol": "SASL_SSL",
+    security_protocol='SASL_SSL',
     "sasl.mechanism": "AWS_MSK_IAM",
     "sasl.username": assumed_role_object['Credentials'].get('AccessKeyId'),
     "sasl.password": assumed_role_object['Credentials'].get('SecretAccessKey'),
     "bootstrap.servers": bootstrap_brokers_iam,
 }
 
-admin_client = AdminClient(conf)
-topic_list = admin_client.list_topics()
+consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1',
+    group_id='my_favorite_group',
+    security_protocol='SASL_SSL',
+    sasl_mechanism='AWS_MSK_IAM',
+    bootstrap_servers=bootstrap_brokers_iam
+)
 
-print_debug(topic_list, "Topics")
+for msg in consumer:
+    print (msg)
 
 # consumer = Consumer(consumer_conf)
 
