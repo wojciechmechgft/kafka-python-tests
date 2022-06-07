@@ -18,3 +18,8 @@ caller_identity = sts_client.get_caller_identity()
 
 print_debug(caller_identity, "STS caller identity")
 print_debug(assumed_role_object, "Assumed role object")
+
+kafka_client = boto3.client('kafka')
+
+kafka_clusters_list = kafka_client.list_clusters()
+print_debug(kafka_clusters_list, "Kafka clusters")
