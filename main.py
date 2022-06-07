@@ -17,4 +17,4 @@ assumed_role_object=sts_client.assume_role(
 caller_identity = sts_client.get_caller_identity()
 
 print_debug(caller_identity, "STS caller identity")
-print(assumed_role_object, "Assumed role object")
+print_debug(assumed_role_object, "Assumed role object")
