@@ -3,7 +3,7 @@ import boto3
 def print_debug(object, desc):
     print("--- {} ---------------------------------".format(desc))
     print(object)
-    print("-------------------------------------")
+    print()
 
 
 sts_client = boto3.client('sts')
