@@ -28,3 +28,10 @@ kafka_client = boto3.client('kafka',
 
 kafka_clusters_list = kafka_client.list_clusters()
 print_debug(kafka_clusters_list, "Kafka clusters")
+
+
+bootstrap_brokers = kafka_client.get_bootstrap_brokers(
+    ClusterArn=kafka_clusters_list['ClusterInfoList'][0].get("ClusterArn")
+)
+
+print_debug(bootstrap_brokers, "Bootstrap brokers")
