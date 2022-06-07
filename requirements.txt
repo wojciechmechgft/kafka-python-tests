@@ -1,6 +1,8 @@
 boto3==1.24.3
 botocore==1.27.3
-confluent-kafka==1.8.2
+requests
+certifi
+confluent-kafka[avro,json,protobuf]>=1.4.2
 jmespath==1.0.0
 kafka-python==2.0.2
 python-dateutil==2.8.2
