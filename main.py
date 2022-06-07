@@ -41,7 +41,8 @@ print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSasl
 
 # https://github.com/confluentinc/confluent-kafka-python
 consumer = Consumer({
-    'bootstrap.servers': bootstrap_brokers_iam
+    'bootstrap.servers': bootstrap_brokers_iam,
+    'group.id': 'mygroup'
 })
 
 
