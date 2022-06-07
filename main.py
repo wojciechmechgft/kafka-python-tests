@@ -1,4 +1,5 @@
 import boto3
+from kafka import KafkaConsumer
 
 def print_debug(object, desc):
     print("--- {} ---------------------------------".format(desc))
@@ -37,3 +38,8 @@ bootstrap_brokers = kafka_client.get_bootstrap_brokers(
 print_debug(bootstrap_brokers, "Bootstrap brokers")
 bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam').split(',')
 print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSaslIam")
+
+
+consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1')
+for msg in consumer:
+    print (msg)
