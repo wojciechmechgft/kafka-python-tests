@@ -8,6 +8,9 @@ assumed_role_object=sts_client.assume_role(
     RoleSessionName="AssumeRoleSession"
 )
 
+caller_identity = sts_client.get_caller_identity()
+
 credentials=assumed_role_object['Credentials']
 
+print(caller_identity)
 print(credentials)
