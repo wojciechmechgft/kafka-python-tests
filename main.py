@@ -1,5 +1,11 @@
 import boto3
 
+def print_debug(object, desc):
+    print("--- {} ---------------------------------".format(desc))
+    print(object)
+    print("-------------------------------------")
+
+
 sts_client = boto3.client('sts')
 
 
@@ -10,7 +16,5 @@ assumed_role_object=sts_client.assume_role(
 
 caller_identity = sts_client.get_caller_identity()
 
-credentials=assumed_role_object
-
-print(caller_identity)
-print(credentials)
+print_debug(caller_identity, "STS caller identity")
+print(assumed_role_object, "Assumed role object")
