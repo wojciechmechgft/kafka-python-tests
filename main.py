@@ -44,8 +44,8 @@ print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSasl
 
 consumer_conf = {
     'bootstrap.servers': bootstrap_brokers_iam,
-    'group.id': 'python-tests'
-    # 'security.protocol': 'SASL_SSL'
+    'group.id': 'python-tests',
+    'security.protocol': 'SSL'
 }
 
 consumer = Consumer(consumer_conf)
