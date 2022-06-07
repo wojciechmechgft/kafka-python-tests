@@ -50,21 +50,25 @@ conf = {
     "bootstrap.servers": bootstrap_brokers_iam,
 }
 
+admin_client = AdminClient(conf)
+topic_list = admin_client.list_topics()
 
-consumer = Consumer(consumer_conf)
+print_debug(topic_list, "Topics")
+
+# consumer = Consumer(consumer_conf)
 
 
-consumer.subscribe(['financing-transfer-service.repayment.snapshot.v1'])
+# consumer.subscribe(['financing-transfer-service.repayment.snapshot.v1'])
 
-while True:
-    msg = consumer.poll(1.0)
+# while True:
+#     msg = consumer.poll(1.0)
 
-    if msg is None:
-        continue
-    if msg.error():
-        print("Consumer error: {}".format(msg.error()))
-        continue
+#     if msg is None:
+#         continue
+#     if msg.error():
+#         print("Consumer error: {}".format(msg.error()))
+#         continue
 
-    print('Received message: {}'.format(msg.value().decode('utf-8')))
+#     print('Received message: {}'.format(msg.value().decode('utf-8')))
 
-consumer.close()
+# consumer.close()
