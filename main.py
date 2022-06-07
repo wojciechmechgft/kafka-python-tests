@@ -1,5 +1,5 @@
 import boto3
-from kafka import KafkaConsumer
+from confluent_kafka import Consumer
 
 def print_debug(object, desc):
     print("--- {} ---------------------------------".format(desc))
@@ -39,8 +39,23 @@ print_debug(bootstrap_brokers, "Bootstrap brokers")
 bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam').split(',')
 print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSaslIam")
 
+# https://github.com/confluentinc/confluent-kafka-python
+consumer = Consumer({
+    'bootstrap.servers': bootstrap_brokers_iam
+})
 
-consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1',
-    bootstrap_servers=bootstrap_brokers_iam)
-for msg in consumer:
-    print (msg)
+
+consumer.subscribe(['financing-transfer-service.repayment.snapshot.v1'])
+
+while True:
+    msg = consumer.poll(1.0)
+
+    if msg is None:
+        continue
+    if msg.error():
+        print("Consumer error: {}".format(msg.error()))
+        continue
+
+    print('Received message: {}'.format(msg.value().decode('utf-8')))
+
+consumer.close()
