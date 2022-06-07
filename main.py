@@ -1,7 +1,11 @@
 # pip3 install boto3
 import boto3
 # pip3 install git+https://github.com/mattoberle/kafka-python.git@feature/2232-AWS_MSK_IAM
-from kafka import KafkaConsumer
+# from kafka import KafkaConsumer
+
+from confluent_kafka import Consumer
+
+
 
 def print_debug(object, desc):
     print("--- {} ---------------------------------".format(desc))
@@ -38,43 +42,42 @@ bootstrap_brokers = kafka_client.get_bootstrap_brokers(
 )
 
 print_debug(bootstrap_brokers, "Bootstrap brokers")
-bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam').split(",")
+bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam')
 print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSaslIam")
 
 # https://github.com/dpkp/kafka-python/pull/2255
 
-# conf = {
-#     security_protocol='SASL_SSL',
-#     "sasl.mechanism": "AWS_MSK_IAM",
-#     "sasl.username": assumed_role_object['Credentials'].get('AccessKeyId'),
-#     "sasl.password": assumed_role_object['Credentials'].get('SecretAccessKey'),
-#     "bootstrap.servers": bootstrap_brokers_iam,
-# }
+conf = {
+    'security.protocol': 'SASL_SSL',
+    'sasl.mechanism': 'PLAIN',
+    "sasl.username": assumed_role_object['Credentials'].get('AccessKeyId'),
+    "sasl.password": assumed_role_object['Credentials'].get('SecretAccessKey'),
+    'bootstrap.servers': bootstrap_brokers_iam,
+}
 
-consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1',
-    # group_id='my_favorite_group',
-    # security_protocol='SASL_SSL',
-    # sasl_mechanism='AWS_MSK_IAM',
-    bootstrap_servers=bootstrap_brokers_iam
-)
+c = Consumer(conf)
+c.subscribe(['financing-transfer-service.repayment.snapshot.v1'])
 
-for msg in consumer:
-    print (msg)
+while True:
+    msg = c.poll(1.0)
 
-# consumer = Consumer(consumer_conf)
+    if msg is None:
+        continue
+    if msg.error():
+        print("Consumer error: {}".format(msg.error()))
+        continue
 
+    print('Received message: {}'.format(msg.value().decode('utf-8')))
 
-# consumer.subscribe(['financing-transfer-service.repayment.snapshot.v1'])
+c.close()
 
-# while True:
-#     msg = consumer.poll(1.0)
+# consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1',
+#     # group_id='my_favorite_group',
+#     # security_protocol='SASL_SSL',
+#     # sasl_mechanism='AWS_MSK_IAM',
+#     bootstrap_servers=bootstrap_brokers_iam
+# )
 
-#     if msg is None:
-#         continue
-#     if msg.error():
-#         print("Consumer error: {}".format(msg.error()))
-#         continue
+# for msg in consumer:
+#     print (msg)
 
-#     print('Received message: {}'.format(msg.value().decode('utf-8')))
-
-# consumer.close()
