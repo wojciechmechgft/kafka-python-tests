@@ -43,13 +43,13 @@ print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSasl
 
 # https://github.com/dpkp/kafka-python/pull/2255
 
-conf = {
-    security_protocol='SASL_SSL',
-    "sasl.mechanism": "AWS_MSK_IAM",
-    "sasl.username": assumed_role_object['Credentials'].get('AccessKeyId'),
-    "sasl.password": assumed_role_object['Credentials'].get('SecretAccessKey'),
-    "bootstrap.servers": bootstrap_brokers_iam,
-}
+# conf = {
+#     security_protocol='SASL_SSL',
+#     "sasl.mechanism": "AWS_MSK_IAM",
+#     "sasl.username": assumed_role_object['Credentials'].get('AccessKeyId'),
+#     "sasl.password": assumed_role_object['Credentials'].get('SecretAccessKey'),
+#     "bootstrap.servers": bootstrap_brokers_iam,
+# }
 
 consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1',
     group_id='my_favorite_group',
