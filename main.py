@@ -1,9 +1,9 @@
 # pip3 install boto3
 import boto3
 # pip3 install git+https://github.com/mattoberle/kafka-python.git@feature/2232-AWS_MSK_IAM
-# from kafka import KafkaConsumer
+from kafka import KafkaConsumer
 
-from confluent_kafka import Consumer
+# from confluent_kafka import Consumer
 
 
 
@@ -47,30 +47,29 @@ print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSasl
 
 # https://github.com/dpkp/kafka-python/pull/2255
 
-conf = {
-    'security.protocol': 'SASL_SSL',
-    'sasl.mechanism': 'PLAIN',
-    "sasl.username": assumed_role_object['Credentials'].get('AccessKeyId'),
-    "sasl.password": assumed_role_object['Credentials'].get('SecretAccessKey'),
-    'bootstrap.servers': bootstrap_brokers_iam,
-    'group.id': 'tests',
-}
+# conf = {
+#     'security.protocol': 'SASL_SSL',
+#     'sasl.mechanism': 'AWS_MSK_IAM',
+#     "sasl.username": assumed_role_object['Credentials'].get('AccessKeyId'),
+#     "sasl.password": assumed_role_object['Credentials'].get('SecretAccessKey'),
+#     'bootstrap.servers': bootstrap_brokers_iam,
+#     'group.id': 'tests',
+# }
 
-c = Consumer(conf)
-c.subscribe(['financing-transfer-service.repayment.snapshot.v1'])
+consumer = KafkaConsumer(
+    'financing-transfer-service.repayment.snapshot.v1',
+    group_id='tests',
+    security_protocol='SASL_SSL',
+    sasl_mechanism='AWS_MSK_IAM',
+    bootstrap_servers=[
+        'b-3.apps-kafka-cluste.lkgw9s.c3.kafka.ap-southeast-1.amazonaws.com:9098',
+        'b-1.apps-kafka-cluste.lkgw9s.c3.kafka.ap-southeast-1.amazonaws.com:9098',
+        'b-2.apps-kafka-cluste.lkgw9s.c3.kafka.ap-southeast-1.amazonaws.com:9098'
+    ]   
+)
 
-while True:
-    msg = c.poll(1.0)
-
-    if msg is None:
-        continue
-    if msg.error():
-        print("Consumer error: {}".format(msg.error()))
-        continue
-
-    print('Received message: {}'.format(msg.value().decode('utf-8')))
-
-c.close()
+for msg in consumer:
+    print (msg)
 
 # consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1',
 #     # group_id='my_favorite_group',
