@@ -53,6 +53,7 @@ conf = {
     "sasl.username": assumed_role_object['Credentials'].get('AccessKeyId'),
     "sasl.password": assumed_role_object['Credentials'].get('SecretAccessKey'),
     'bootstrap.servers': bootstrap_brokers_iam,
+    'group.id': 'tests',
 }
 
 c = Consumer(conf)
