@@ -41,11 +41,14 @@ print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSasl
 
 # https://github.com/confluentinc/confluent-kafka-python
 # https://blog.dataminded.com/aws-msk-secure-python-kafka-client-1d25dae39207
-consumer = Consumer({
+
+consumer_conf = {
     'bootstrap.servers': bootstrap_brokers_iam,
-    'group.id': 'python-tests',
-    'security.protocol': 'SASL_SSL'
-})
+    'group.id': 'python-tests'
+    # 'security.protocol': 'SASL_SSL'
+}
+
+consumer = Consumer(consumer_conf)
 
 
 consumer.subscribe(['financing-transfer-service.repayment.snapshot.v1'])
