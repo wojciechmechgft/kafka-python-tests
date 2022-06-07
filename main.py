@@ -40,6 +40,7 @@ bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam').sp
 print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSaslIam")
 
 
-consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1')
+consumer = KafkaConsumer('financing-transfer-service.repayment.snapshot.v1',
+    bootstrap_servers=bootstrap_brokers_iam)
 for msg in consumer:
     print (msg)
