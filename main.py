@@ -57,7 +57,7 @@ print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSasl
 # }
 
 consumer = KafkaConsumer(
-    group_id='tests',
+    group_id='apps-kafka-cluster',
     security_protocol='SASL_SSL',
     sasl_mechanism='AWS_MSK_IAM',
     bootstrap_servers=bootstrap_brokers_iam   
