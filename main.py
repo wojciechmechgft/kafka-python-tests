@@ -42,7 +42,7 @@ bootstrap_brokers = kafka_client.get_bootstrap_brokers(
 )
 
 print_debug(bootstrap_brokers, "Bootstrap brokers")
-bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam')
+bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam').split(",")
 print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSaslIam")
 
 # https://github.com/dpkp/kafka-python/pull/2255
@@ -61,11 +61,7 @@ consumer = KafkaConsumer(
     group_id='tests',
     security_protocol='SASL_SSL',
     sasl_mechanism='AWS_MSK_IAM',
-    bootstrap_servers=[
-        'b-3.apps-kafka-cluste.lkgw9s.c3.kafka.ap-southeast-1.amazonaws.com:9098',
-        'b-1.apps-kafka-cluste.lkgw9s.c3.kafka.ap-southeast-1.amazonaws.com:9098',
-        'b-2.apps-kafka-cluste.lkgw9s.c3.kafka.ap-southeast-1.amazonaws.com:9098'
-    ]   
+    bootstrap_servers=bootstrap_brokers_iam   
 )
 
 for msg in consumer:
