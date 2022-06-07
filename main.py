@@ -35,5 +35,5 @@ bootstrap_brokers = kafka_client.get_bootstrap_brokers(
 )
 
 print_debug(bootstrap_brokers, "Bootstrap brokers")
-bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam')
+bootstrap_brokers_iam = bootstrap_brokers.get('BootstrapBrokerStringSaslIam').split(',')
 print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSaslIam")
