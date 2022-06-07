@@ -10,7 +10,7 @@ assumed_role_object=sts_client.assume_role(
 
 caller_identity = sts_client.get_caller_identity()
 
-credentials=assumed_role_object['Credentials']
+credentials=assumed_role_object
 
 print(caller_identity)
 print(credentials)
