@@ -1,5 +1,5 @@
 import boto3
-from confluent_kafka import Consumer
+from confluent_kafka.admin import AdminClient
 
 def print_debug(object, desc):
     print("--- {} ---------------------------------".format(desc))
@@ -42,11 +42,14 @@ print_debug(bootstrap_brokers_iam, "Bootstrap brokers: BootstrapBrokerStringSasl
 # https://github.com/confluentinc/confluent-kafka-python
 # https://blog.dataminded.com/aws-msk-secure-python-kafka-client-1d25dae39207
 
-consumer_conf = {
-    'bootstrap.servers': bootstrap_brokers_iam,
-    'group.id': 'python-tests',
-    'security.protocol': 'SSL'
+conf = {
+    "security.protocol": "SASL_SSL",
+    "sasl.mechanism": "SCRAM-SHA-512",
+    "sasl.username": assumed_role_object['Credentials'].get('AccessKeyId'),
+    "sasl.password": assumed_role_object['Credentials'].get('SecretAccessKey'),
+    "bootstrap.servers": bootstrap_brokers_iam,
 }
+
 
 consumer = Consumer(consumer_conf)
 
